@@ -1,0 +1,55 @@
+{
+  "name": "electron-game",
+  "version": "0.1.0-alpha",
+  "main": "main.js",
+  "author": "topdatop01",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/topdatop01/tdtsimpleclicker/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/topdatop01/tdtsimpleclicker"
+  },
+  "homepage": "https://github.com/topdatop01/tdtsimpleclicker",
+  "scripts": {
+    "start": "electron .",
+        "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^43.4.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "ru.topdatop.tdtsimpleclicker",
+    "productName": "TDTSimpleClicker",
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        "portable"
+      ],
+      "icon": "assets/icon.png"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "pacman",
+        "rpm"
+      ],
+      "icon": "assets/icon.png",
+      "category": "Game",
+      "maintainer": "topdatop01 <topdatop01@outlook.com>"
+    }
+  },
+  "allowScripts": {
+    "electron@28.3.3": true,
+    "electron-winstaller@5.4.0": true
+  }
+}
