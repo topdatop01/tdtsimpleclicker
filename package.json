@@ -1,5 +1,6 @@
 {
   "name": "electron-game",
+  "description": "TDTSimpleClicker — простой кликер печеньки",
   "version": "0.1.0-alpha",
   "main": "main.js",
   "author": "topdatop01",
@@ -45,9 +46,7 @@
       ],
       "icon": "assets/icon.png",
       "category": "Game",
-      "maintainer": "topdatop01 <topdatop01@outlook.com>",
-      "desktopName": "TDTSimpleClicker",
-      "syncDesktopName": true
+      "maintainer": "topdatop01 <topdatop01@outlook.com>"
     }
   },
   "allowScripts": {
