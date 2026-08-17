@@ -14,7 +14,7 @@
   "homepage": "https://github.com/topdatop01/tdtsimpleclicker",
   "scripts": {
     "start": "electron .",
-        "dist": "electron-builder"
+    "dist": "electron-builder"
   },
   "devDependencies": {
     "electron": "^43.4.0",
