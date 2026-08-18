@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TDTSimpleClicker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <p id="version">0.2.0-alpha</p>
+    <header>
+        <div class="head-left">
+
+        </div>
+        <div class="head-center">
+            <div class="nav-buttons">
+                <button class="active-button" id="nav-button-general">Главная</button>
+                <button id="nav-button-upgrade">Улучшения</button>
+                <button id="nav-button-shop">Магазин</button>
+                <button id="nav-button-settings">Настройки</button>
+            </div>
+        </div>
+        <div class="head-right">
+
+        </div>
+    </header>
+    <main id="main-general">
+        <img src="assets/cookie.png" alt="Кликни чтобы заработать денег" id="cookie">
+        <h1 class="balance">0₽ - (+1₽ за клик)</h1>
+    </main>
+    <main id="main-shop">
+        <h1 class="centered">Скоро...</h1>
+    </main>
+    <main id="main-upgrade">
+        <div class="upgrade-buy">
+            <p id="upgrade-click-text">+1 клик (У тебя 1)</p>
+            <button id="upgrade-click-button">-100₽ (0₽)</button>
+        </div>
+    </main>
+    <main id="main-settings">
+        <h3>Звук</h3>
+        <div class="option-switch">
+            <p>Звуковые эффекты</p>
+            <button id="settings-option-sound-sfx-switch-button">ВКЛ</button>
+        </div>
+        <h3>Изображение</h3>
+        <div class="option-switch">
+            <p>Графические эффекты</p>
+            <button id="settings-option-graphic-gfx-switch-button">ВКЛ</button>
+        </div>
+    </main>
+    <script>
+        // Переменные
+
+        let starter_main = "general";
+        let nav_mains_set = [
+            "general",
+            "shop",
+            "upgrade",
+            "settings"
+        ];
+        let option_switch_set = {
+            "settings-option-sound-sfx-switch-button": "sfx",
+            "settings-option-graphic-gfx-switch-button": "gfx"
+        };
+
+        let money = 0;
+        let for_click = 1;
+        let settings_config = {
+            "sfx": true,
+            "gfx": true
+        }
+        let cps = 0;
+        let anticheat_block = false;
+        let anticheat_block_count = -1;
+
+    </script>
+    <script>
+        // Вкрадки
+
+        function switch_active_bttn_in_nav(id) {
+            const activeBtn = document.querySelector(".nav-buttons .active-button");
+            if (activeBtn) activeBtn.classList.remove("active-button");
+            const newBtn = document.getElementById("nav-button-" + id);
+            if (newBtn) newBtn.classList.add("active-button");
+        }
+
+        function switch_main(id) {
+            document.querySelectorAll("main").forEach(el => el.classList.add("hidden"));
+            const mainEl = document.getElementById("main-" + id);
+            if (mainEl) mainEl.classList.remove("hidden");
+            switch_active_bttn_in_nav(id);
+        }
+
+        switch_main(starter_main);
+
+        nav_mains_set.forEach(id => {
+            const btn = document.getElementById("nav-button-" + id);
+            if (btn) {
+                btn.addEventListener("click", function() {
+                    switch_main(id);
+                    playClickSound1();
+                });
+            }
+        });
+    </script>
+    <script>
+        // Печенька
+
+        const cookie = document.getElementById("cookie");
+
+        function hold_cookie() {
+            this.style.transform = "translate(-50%, -50%) scale(0.85)";
+        }
+
+        function uhold_cookie() {
+            this.style.transform = "translate(-50%, -50%) scale(1)";
+        }
+
+        cookie.addEventListener("mousedown", hold_cookie);
+
+        cookie.addEventListener("mouseup", uhold_cookie);
+
+        cookie.addEventListener("mouseleave", uhold_cookie);
+
+        cookie.addEventListener("touchstart", function(e) {
+            e.preventDefault();
+            hold_cookie
+        });
+
+        cookie.addEventListener("touchend", uhold_cookie);
+
+        function spawnFloatingText(x, y) {
+            if (!settings_config["gfx"]) {
+                return;
+            }
+            const el = document.createElement("div");
+            el.textContent = "+" + for_click;
+            el.style.position = "fixed";
+            el.style.left = x + "px";
+            el.style.top = y + "px";
+            el.style.fontSize = "30px";
+            el.style.fontWeight = "bold";
+            el.style.color = "#fff";
+            el.style.textShadow = "0 0 10px rgba(255,255,255,0.5)";
+            el.style.pointerEvents = "none";
+            el.style.userSelect = "none";
+            el.style.transition = "all 0.8s ease-out";
+            el.style.opacity = "1";
+            document.body.appendChild(el);
+
+            const angle = Math.random() * 2 * Math.PI;
+            const distance = 150 + Math.random() * 100;
+            const dx = Math.cos(angle) * distance;
+            const dy = Math.sin(angle) * distance;
+
+            requestAnimationFrame(() => {
+                el.style.transform = `translate(${dx}px, ${dy}px)`;
+                el.style.opacity = "0";
+            });
+
+            setTimeout(() => {
+                el.remove();
+            }, 800);
+        }
+
+        function click_cookie() {
+            if (anticheat_block) {
+                return
+            }
+            cps = cps + 1;
+
+            money = money + for_click;
+            const rect = cookie.getBoundingClientRect();
+            const x = rect.left + rect.width / 2 - 15;
+            const y = rect.top + rect.height / 2 - 15;
+            spawnFloatingText(x, y);
+
+            playClickSound2()
+        }
+
+        setInterval(() => {
+            document.getElementById("main-general").querySelector(".balance").textContent = money + "₽ (+" + for_click + "₽ за клик)"
+        }, 10)
+
+        cookie.addEventListener("click", click_cookie);
+        cookie.addEventListener("touchstart", click_cookie);
+    </script>
+    <script>
+        // Античит
+
+        setInterval(() => {
+            if (cps > 25) {
+                if (!anticheat_block) {
+                    anticheat_block = true;
+                    anticheat_block_count++;
+
+                    if (anticheat_block_count >= 5) {
+                        if (anticheat_block_count <= 10) {
+                            setTimeout(() => {
+                                anticheat_block = false;
+                            }, 15000);
+                        }
+                    } else {
+                        setTimeout(() => {
+                            anticheat_block = false;
+                        }, 5000);
+                    }
+                }
+            }
+        }, 10);
+
+        // Сброс счётчика CPS каждую секунду
+        setInterval(() => {
+            cps = 0;
+        }, 1000);
+    </script>
+    <script>
+        // Адаптациая под мобилу
+
+        if (window.innerWidth <= 768) {}
+
+        document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
+    </script>
+    <script>
+        // Саунд
+
+        const click_sound1 = new Audio("assets/bttn-click3.wav");
+        function playClickSound1() {
+            if (settings_config["sfx"]) {
+                click_sound1.currentTime = 0;
+                click_sound1.play();
+            }
+        }
+
+        const click_sound2 = new Audio("assets/bttn-click2.wav");
+        function playClickSound2() {
+            if (settings_config["sfx"]) {
+                click_sound2.currentTime = 0;
+                click_sound2.play();
+            }
+        }
+
+        const error_sound1 = new Audio("assets/error1.wav");
+        function ErrorSound1() {
+            if (settings_config["sfx"]) {
+                error_sound1.currentTime = 0;
+                error_sound1.play();
+            }
+        }
+    </script>
+    <script>
+        // Настройки (страница)
+
+        for (let key in option_switch_set) {
+            if (settings_config[option_switch_set[key]]) {
+                document.getElementById(key).innerText = "✔";
+            } else {
+                document.getElementById(key).innerText = "✘";
+            }
+            document.getElementById(key).addEventListener("click", function() {
+                settings_config[option_switch_set[key]] = !settings_config[option_switch_set[key]];
+                if (settings_config[option_switch_set[key]]) {
+                    document.getElementById(key).innerText = "✔";
+                    document.getElementById(key).style.backgroundColor = "green";
+                } else {
+                    document.getElementById(key).innerText = "✘";
+                    document.getElementById(key).style.backgroundColor = "red";
+                }
+                playClickSound1();
+            });
+        }
+    </script>
+    <script>
+        // Улучшения
+        document.getElementById("upgrade-click-button").addEventListener("click", function() {
+            if (money >= Math.floor(for_click * 2 * 50)) {
+                money = money - Math.floor(for_click * 2 * 50);
+                for_click = for_click + 1;
+            } else {
+                ErrorSound1();
+            }
+        });
+
+        setInterval(() => {
+            document.getElementById("upgrade-click-text").innerText = "+1 клик (У тебя " + for_click + ")";
+            document.getElementById("upgrade-click-button").innerText = "-" + Math.floor(for_click * 2 * 50) + "₽ (" + money + "₽)";
+
+            if (money >= Math.floor(for_click * 2 * 50)) {
+                document.getElementById("upgrade-click-button").style.backgroundColor = "green";
+            } else {
+                document.getElementById("upgrade-click-button").style.backgroundColor = "red";
+            }
+        }, 10);
+    </script>
+</body>
+</html>

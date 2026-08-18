@@ -18,11 +18,7 @@ function createWindow() {
         Menu.setApplicationMenu(null);
     }
 
-    win.loadFile('index.html');
-
-    if (debug) {
-        win.webContents.openDevTools();
-    }
+    win.loadFile('web_files/index.html');
 }
 
 app.whenReady().then(createWindow);

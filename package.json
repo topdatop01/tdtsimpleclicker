@@ -1,7 +1,7 @@
 {
-  "name": "electron-game",
-  "description": "TDTSimpleClicker — простой кликер печеньки",
-  "version": "0.1.0-alpha",
+  "name": "TDTSimpleClicker",
+  "description": "TDTSimpleClicker — простой кликер овсяной печеньки",
+  "version": "0.2.0-alpha",
   "main": "main.js",
   "author": "topdatop01",
   "license": "MIT",
@@ -31,7 +31,9 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         },
         "portable"
       ],
@@ -41,8 +43,7 @@
       "target": [
         "AppImage",
         "deb",
-        "pacman",
-        "rpm"
+        "pacman"
       ],
       "icon": "assets/icon.png",
       "category": "Game",
@@ -52,5 +53,10 @@
   "allowScripts": {
     "electron@28.3.3": true,
     "electron-winstaller@5.4.0": true
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0"
   }
 }

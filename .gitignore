@@ -1,4 +1,5 @@
 node_modules/
+android/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -6,6 +7,7 @@ yarn-error.log*
 dist/
 release/
 out/
+compiled/
 
 .DS_Store
 Thumbs.db
@@ -29,3 +31,5 @@ desktop.ini
 *.cache
 *.tmp
 *.temp
+
+build.sh
